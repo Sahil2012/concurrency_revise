@@ -13,24 +13,22 @@ public class Main {
         ExecutorService service = Executors.newFixedThreadPool(2);
 
         Future<?> f1 = service.submit(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
+           for(int i = 0; i < 1000; i++) {
             task.increment();
+           }
         });
 
 
         Future<?> f2 = service.submit(() -> {
-            System.out.println(task.get());
+            for(int i = 0; i < 100; i++) {
+                task.increment();
+            }
         });
 
         f1.get();
         f2.get();
 
+        //both f1 and f2 are writing on same resource hence Atomic/Sycnchonized
         System.out.println("Value : " + task.get());
         service.shutdown();
     }
