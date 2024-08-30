@@ -10,19 +10,28 @@ import java.util.concurrent.Future;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// @SpringBootApplication
 public class ReviseApplication {
 
 	public static void main(String[] args) {
-		// SpringApplication.run(ReviseApplication.class, args);
 
 		TaskCall tc = new TaskCall();
 
+		/**
+		 * Executor is the parent class have only 1 method (void excute())
+		 *
+		 * ExecutorService is a child class of Executor have multiple methods submit,invokAll,awaitTerminate, isDone, etc. 
+		 */
 		ExecutorService service = Executors.newFixedThreadPool(2);
 
 		List<Future<?>> li = new ArrayList<>();
 		for(int i = 0; i < 10; i ++) {
 			int fi = i;
+			/**
+			 *  3 submit method to start the thread execution(run)
+			 * 	submit(runable) --> runnbale (run method) does not return anything --> hence Fututre<status>
+			 * 	submit(callable) --> callable (call methid) do return generic <v> --> hance Furture<V>
+			 * 	submit(runable,value) --> calls the runable(run) but returns Future<value>
+			 */
 			Future<?> f = service.submit(() -> {
 			
 				try {
@@ -40,6 +49,7 @@ public class ReviseApplication {
 
 		li.stream().forEach(f -> {
 			try {
+				// blocking the thread (join equivalent) return the value in future
 				f.get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
